@@ -46,4 +46,5 @@ export interface QueryParams {
     sortDirection: 'asc' | 'desc';
     pageNumber: number;
     pageSize: number;
+    blogId?: string;
 }

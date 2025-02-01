@@ -1,21 +1,24 @@
-// blogs.service.ts
 import {BlogsQueryRepository} from "../repositories/blogs-query.repository";
 import {BlogsCommandRepository} from "../repositories/blogs-command.repository";
 import {PageResponse, QueryParams} from "../../../shared/models/common.model";
 import {BlogCreateModel, BlogViewModel} from "../models/blog.model";
 import {TimestampService} from "../../../shared/services/time-stamp.service";
+import {PostsQueryRepository} from "../../posts/repositories/posts-query.repository";
+import {PostCreateModel, PostViewModel} from "../../posts/models/post.model";
+import {PostsCommandRepository} from "../../posts/repositories/posts-command.repository";
 
 export class BlogsService {
     constructor(
         private blogsQueryRepository: BlogsQueryRepository,
         private blogsCommandRepository: BlogsCommandRepository,
-        // private postsQueryRepository: PostsQueryRepository,  // для getBlogPosts
+        private postsQueryRepository: PostsQueryRepository,
+        private postsCommandRepository: PostsCommandRepository
     ) {}
 
     async getBlogs(params: QueryParams): Promise<PageResponse<BlogViewModel>> {
         return this.blogsQueryRepository.findAll({
-            searchParams: params.searchNameTerm ? [
-                { fieldName: 'name', value: params.searchNameTerm }
+            searchParams: params.searchParams.length ? [
+                { fieldName: 'name', value: params.searchParams[0].value }
             ] : [],
             sortBy: params.sortBy || 'createdAt',
             sortDirection: params.sortDirection || 'desc',
@@ -38,6 +41,31 @@ export class BlogsService {
         return this.blogsCommandRepository.create(blogToCreate);
     }
 
+    async getBlogPosts(blogId: string, params: QueryParams): Promise<PageResponse<PostViewModel>> {
+        return this.postsQueryRepository.findAll({
+            searchParams: [],
+            sortBy: params.sortBy || 'createdAt',
+            sortDirection: params.sortDirection || 'desc',
+            pageNumber: Number(params.pageNumber) || 1,
+            pageSize: Number(params.pageSize) || 10,
+            blogId: blogId
+        });
+    }
+
+    async createBlogPost(data: PostCreateModel): Promise<PostViewModel | null> {
+        const blog = await this.blogsQueryRepository.findById(data.blogId);
+        if (!blog) return null;
+
+        const postToCreate = {
+            ...data,
+            createdAt: TimestampService.generate(),
+            blogName: blog.name
+        };
+
+        const postId = await this.postsCommandRepository.create(postToCreate);
+        return this.postsQueryRepository.findById(postId);
+    }
+
     async updateBlog(id: string, data: BlogCreateModel): Promise<boolean> {
         return this.blogsCommandRepository.update(id, data);
     }
@@ -46,7 +74,7 @@ export class BlogsService {
         return this.blogsCommandRepository.delete(id);
     }
 
-    async deleteBlogs(): Promise<void> {
+    async deleteAll(): Promise<void> {
         return this.blogsCommandRepository.deleteAll();
     }
 }

@@ -5,10 +5,9 @@ export abstract class AbstractRepository<T> {
     protected collection: Collection<T> | null = null;
 
     protected constructor(protected collectionName: string) {
-        this.init();
     }
 
-    protected init() {
+    init() {
         if (!this.collection) {
             this.collection = getDb().collection<T>(this.collectionName);
         }
