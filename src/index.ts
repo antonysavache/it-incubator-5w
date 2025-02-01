@@ -4,7 +4,7 @@ import { SETTINGS } from './settings';
 import {blogsCommandRepository, blogsQueryRepository} from "./features/blogs/blogs.composition";
 import {postsCommandRepository, postsQueryRepository} from "./features/posts/posts.composition";
 
-export async function startApp() {
+async function startApp() {
     try {
         await runDb();
         console.log('Connected to MongoDB');
