@@ -1,10 +1,14 @@
 import { app } from './app';
 import { runDb } from './shared/db/mongo-db';
 import { SETTINGS } from './settings';
-import {blogsCommandRepository, blogsQueryRepository} from "./features/blogs/blogs.composition";
-import {postsCommandRepository, postsQueryRepository} from "./features/posts/posts.composition";
+import {
+    blogsCommandRepository,
+    blogsQueryRepository,
+    postsCommandRepository,
+    postsQueryRepository
+} from "./shared/composition-root";
 
-async function startApp() {
+export async function startApp() {
     try {
         await runDb();
         console.log('Connected to MongoDB');

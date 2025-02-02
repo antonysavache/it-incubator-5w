@@ -1,6 +1,10 @@
 import {runDb} from "./src/shared/db/mongo-db";
-import {blogsCommandRepository, blogsQueryRepository} from "./src/features/blogs/blogs.composition";
-import {postsCommandRepository, postsQueryRepository} from "./src/features/posts/posts.composition";
+import {
+    blogsCommandRepository,
+    blogsQueryRepository,
+    postsCommandRepository,
+    postsQueryRepository
+} from "./src/shared/composition-root";
 
 beforeAll(async () => {
     await runDb();

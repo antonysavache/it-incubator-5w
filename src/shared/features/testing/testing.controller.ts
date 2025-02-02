@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import {blogsService} from "../../../features/blogs/blogs.composition";
-import {postsService} from "../../../features/posts/posts.composition";
+import {blogsService, postsService} from "../../composition-root";
 
 export const testingController = {
     async deleteAll(req: Request, res: Response) {

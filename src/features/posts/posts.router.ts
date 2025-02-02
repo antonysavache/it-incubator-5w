@@ -1,9 +1,9 @@
 // features/posts/posts.router.ts
 import { Router } from 'express';
-import { postsController } from './posts.composition';
 import { authMiddleware } from '../../shared/middlewares/auth.middleware';
 import { handleValidationErrors } from '../../shared/middlewares/error-handler.middleware';
 import {blogIdValidation, postsValidation} from "./posts-validation.middleware";
+import {postsController} from "../../shared/composition-root";
 
 export const postsRouter = Router();
 
