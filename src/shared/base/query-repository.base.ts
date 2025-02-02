@@ -6,7 +6,9 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
     async findAll(params: QueryParams): Promise<PageResponse<ToViewModel<T>>> {
         this.checkInit();
 
-        const filter = this.buildFilter(params.searchParams);
+        const additionalFilter = params.blogId ? { blogId: params.blogId } : null;
+
+        const filter = this.buildFilter(params.searchParams, additionalFilter);
         const sort = { [params.sortBy]: params.sortDirection === 'asc' ? 1 : -1 } as Sort;
         const skip = (params.pageNumber - 1) * params.pageSize;
 
@@ -45,18 +47,24 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
         return this.toViewModel(result);
     }
 
-    protected buildFilter(searchParams: SearchParam[]): Filter<T> {
+    protected buildFilter(searchParams: SearchParam[], additionalFilter?: any): Filter<T> {
         if (!searchParams.length) {
             return {};
         }
 
-        const filter = searchParams.reduce((acc, param) => ({
+        let filter = {};
+
+        filter = searchParams.reduce((acc, param) => ({
             ...acc,
             [param.fieldName]: {
                 $regex: param.value,
                 $options: 'i'
             }
         }), {});
+
+        if (additionalFilter) {
+            filter = { ...filter, ...additionalFilter };
+        }
 
         return filter as Filter<T>;
     }

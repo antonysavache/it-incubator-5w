@@ -42,7 +42,7 @@ export class BlogsService {
     }
 
     async getBlogPosts(blogId: string, params: QueryParams): Promise<PageResponse<PostViewModel>> {
-        const blogs = this.postsQueryRepository.findAll({
+        const posts = this.postsQueryRepository.findAll({
             searchParams: [],
             sortBy: params.sortBy || '_id',
             sortDirection: params.sortDirection || 'desc',
@@ -50,7 +50,7 @@ export class BlogsService {
             pageSize: Number(params.pageSize) || 10,
             blogId: blogId
         });
-        return blogs ?? null;
+        return posts ?? null;
     }
 
     async createBlogPost(data: PostCreateModel): Promise<PostViewModel | null> {
