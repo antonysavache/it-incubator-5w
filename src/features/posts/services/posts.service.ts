@@ -16,7 +16,7 @@ export class PostsService {
     async getPosts(params: QueryParams): Promise<PageResponse<PostViewModel>> {
         return this.postsQueryRepo.findAll({
             searchParams: [],
-            sortBy: params.sortBy || 'createdAt',
+            sortBy: params.sortBy || '_id',
             sortDirection: params.sortDirection || 'desc',
             pageNumber: Number(params.pageNumber) || 1,
             pageSize: Number(params.pageSize) || 10

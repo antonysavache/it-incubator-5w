@@ -20,7 +20,7 @@ export class BlogsService {
             searchParams: params.searchParams.length ? [
                 { fieldName: 'name', value: params.searchParams[0].value }
             ] : [],
-            sortBy: params.sortBy || 'createdAt',
+            sortBy: params.sortBy || '_id',
             sortDirection: params.sortDirection || 'desc',
             pageNumber: Number(params.pageNumber) || 1,
             pageSize: Number(params.pageSize) || 10
@@ -44,7 +44,7 @@ export class BlogsService {
     async getBlogPosts(blogId: string, params: QueryParams): Promise<PageResponse<PostViewModel>> {
         const blogs = this.postsQueryRepository.findAll({
             searchParams: [],
-            sortBy: params.sortBy || 'createdAt',
+            sortBy: params.sortBy || '_id',
             sortDirection: params.sortDirection || 'desc',
             pageNumber: Number(params.pageNumber) || 1,
             pageSize: Number(params.pageSize) || 10,
