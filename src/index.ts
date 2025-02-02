@@ -8,7 +8,7 @@ import {
     postsQueryRepository
 } from "./shared/composition-root";
 
-export async function startApp() {
+async function startApp() {
     try {
         await runDb();
         console.log('Connected to MongoDB');
