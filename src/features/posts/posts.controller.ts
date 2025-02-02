@@ -8,7 +8,7 @@ export class PostsController {
     getPosts = async (req: Request, res: Response) => {
         const params: QueryParams = {
             searchParams: [],
-            sortBy: req.query.sortBy?.toString() || 'createdAt',
+            sortBy: req.query.sortBy?.toString() || '_id',
             sortDirection: req.query.sortDirection as 'asc' | 'desc' || 'desc',
             pageNumber: Number(req.query.pageNumber) || 1,
             pageSize: Number(req.query.pageSize) || 10

@@ -12,7 +12,7 @@ export class BlogsController {
             searchParams: req.query.searchNameTerm ? [
                 { fieldName: 'name', value: req.query.searchNameTerm }
             ] : [],
-            sortBy: req.query.sortBy || 'createdAt',
+            sortBy: req.query.sortBy || '_id',
             sortDirection: req.query.sortDirection as 'asc' | 'desc' || 'desc',
             pageNumber: Number(req.query.pageNumber) || 1,
             pageSize: Number(req.query.pageSize) || 10
@@ -43,7 +43,7 @@ export class BlogsController {
     getBlogPosts = async (req: Request<{id: string}, {}, {}, any>, res: Response) => {
         const params: QueryParams = {
             searchParams: [],
-            sortBy: req.query.sortBy || 'createdAt',
+            sortBy: req.query.sortBy || '_id',
             sortDirection: req.query.sortDirection as 'asc' | 'desc' || 'desc',
             pageNumber: Number(req.query.pageNumber) || 1,
             pageSize: Number(req.query.pageSize) || 10
