@@ -41,8 +41,11 @@ export class BlogsService {
         return this.blogsCommandRepository.create(blogToCreate);
     }
 
-    async getBlogPosts(blogId: string, params: QueryParams): Promise<PageResponse<PostViewModel>> {
-        const posts = this.postsQueryRepository.findAll({
+    async getBlogPosts(blogId: string, params: QueryParams): Promise<PageResponse<PostViewModel> | null> {
+        const blog = await this.blogsQueryRepository.findById(blogId);
+        if (!blog) return null;
+
+        return this.postsQueryRepository.findAll({
             searchParams: [],
             sortBy: params.sortBy || '_id',
             sortDirection: params.sortDirection || 'desc',
@@ -50,7 +53,6 @@ export class BlogsService {
             pageSize: Number(params.pageSize) || 10,
             blogId: blogId
         });
-        return posts ?? null;
     }
 
     async createBlogPost(data: PostCreateModel): Promise<PostViewModel | null> {

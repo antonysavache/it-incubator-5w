@@ -48,22 +48,18 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
     }
 
     protected buildFilter(searchParams: SearchParam[], additionalFilter?: any): Filter<T> {
-        if (!searchParams.length) {
-            return {};
-        }
+        let filter = additionalFilter || {};
 
-        let filter = {};
+        if (searchParams.length) {
+            const searchFilter = searchParams.reduce((acc, param) => ({
+                ...acc,
+                [param.fieldName]: {
+                    $regex: param.value,
+                    $options: 'i'
+                }
+            }), {});
 
-        filter = searchParams.reduce((acc, param) => ({
-            ...acc,
-            [param.fieldName]: {
-                $regex: param.value,
-                $options: 'i'
-            }
-        }), {});
-
-        if (additionalFilter) {
-            filter = { ...filter, ...additionalFilter };
+            filter = { ...filter, ...searchFilter };
         }
 
         return filter as Filter<T>;

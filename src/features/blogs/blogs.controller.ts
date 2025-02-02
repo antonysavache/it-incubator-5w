@@ -50,7 +50,10 @@ export class BlogsController {
         };
 
         const posts = await this.blogsService.getBlogPosts(req.params.id, params);
-        res.status(posts.items ? 200 : 404).json(posts);
+        if (!posts) {
+            res.sendStatus(404);
+        }
+        res.json(posts);
     }
 
     createBlogPost = async (req: Request, res: Response) => {
