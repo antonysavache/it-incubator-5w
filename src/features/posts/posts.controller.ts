@@ -5,13 +5,12 @@ import { QueryParams } from "../../shared/models/common.model";
 export class PostsController {
     constructor(private postsService: PostsService) {}
 
-    getPosts = async (req: Request, res: Response) => {
+    getPosts = async (req: Request<{}, {}, {}, QueryParams>, res: Response) => {
         const params: QueryParams = {
-            searchParams: [],
-            sortBy: req.query.sortBy?.toString() || '_id',
-            sortDirection: req.query.sortDirection as 'asc' | 'desc' || 'desc',
-            pageNumber: Number(req.query.pageNumber) || 1,
-            pageSize: Number(req.query.pageSize) || 10
+            sortBy: req.query.sortBy?.toString(),
+            sortDirection: req.query.sortDirection as 'asc' | 'desc',
+            pageNumber: req.query.pageNumber?.toString(),
+            pageSize: req.query.pageSize?.toString()
         };
 
         const posts = await this.postsService.getPosts(params);

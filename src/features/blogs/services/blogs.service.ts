@@ -1,11 +1,11 @@
-import {BlogsQueryRepository} from "../repositories/blogs-query.repository";
-import {BlogsCommandRepository} from "../repositories/blogs-command.repository";
-import {PageResponse, QueryParams} from "../../../shared/models/common.model";
-import {BlogCreateModel, BlogViewModel} from "../models/blog.model";
-import {TimestampService} from "../../../shared/services/time-stamp.service";
-import {PostsQueryRepository} from "../../posts/repositories/posts-query.repository";
-import {PostCreateModel, PostViewModel} from "../../posts/models/post.model";
-import {PostsCommandRepository} from "../../posts/repositories/posts-command.repository";
+import { BlogsQueryRepository } from "../repositories/blogs-query.repository";
+import { BlogsCommandRepository } from "../repositories/blogs-command.repository";
+import { PageResponse, QueryParams } from "../../../shared/models/common.model";
+import { BlogCreateModel, BlogViewModel } from "../models/blog.model";
+import { TimestampService } from "../../../shared/services/time-stamp.service";
+import { PostsQueryRepository } from "../../posts/repositories/posts-query.repository";
+import { PostCreateModel, PostViewModel } from "../../posts/models/post.model";
+import { PostsCommandRepository } from "../../posts/repositories/posts-command.repository";
 
 export class BlogsService {
     constructor(
@@ -17,13 +17,13 @@ export class BlogsService {
 
     async getBlogs(params: QueryParams): Promise<PageResponse<BlogViewModel>> {
         return this.blogsQueryRepository.findAll({
-            searchParams: params.searchParams.length ? [
-                { fieldName: 'name', value: params.searchParams[0].value }
-            ] : [],
+            searchParams: params.searchNameTerm
+                ? [{ fieldName: 'name', value: params.searchNameTerm }]
+                : [],
             sortBy: params.sortBy || '_id',
             sortDirection: params.sortDirection || 'desc',
-            pageNumber: Number(params.pageNumber) || 1,
-            pageSize: Number(params.pageSize) || 10
+            pageNumber: params.pageNumber || '1',
+            pageSize: params.pageSize || '10'
         });
     }
 
@@ -49,9 +49,9 @@ export class BlogsService {
             searchParams: [],
             sortBy: params.sortBy || '_id',
             sortDirection: params.sortDirection || 'desc',
-            pageNumber: Number(params.pageNumber) || 1,
-            pageSize: Number(params.pageSize) || 10,
-            blogId: blogId
+            pageNumber: params.pageNumber || '1',
+            pageSize: params.pageSize || '10',
+            blogId
         });
     }
 

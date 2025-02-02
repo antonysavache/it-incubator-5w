@@ -1,10 +1,9 @@
-import {PostsQueryRepository} from "../repositories/posts-query.repository";
-import {PostsCommandRepository} from "../repositories/posts-command.repository";
-import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query.repository";
-import {PageResponse, QueryParams} from "../../../shared/models/common.model";
-import {PostCreateModel, PostViewModel} from "../models/post.model";
-import {TimestampService} from "../../../shared/services/time-stamp.service";
-
+import { PostsQueryRepository } from "../repositories/posts-query.repository";
+import { PostsCommandRepository } from "../repositories/posts-command.repository";
+import { BlogsQueryRepository } from "../../blogs/repositories/blogs-query.repository";
+import { PageResponse, QueryParams } from "../../../shared/models/common.model";
+import { PostCreateModel, PostViewModel } from "../models/post.model";
+import { TimestampService } from "../../../shared/services/time-stamp.service";
 
 export class PostsService {
     constructor(
@@ -18,8 +17,8 @@ export class PostsService {
             searchParams: [],
             sortBy: params.sortBy || '_id',
             sortDirection: params.sortDirection || 'desc',
-            pageNumber: Number(params.pageNumber) || 1,
-            pageSize: Number(params.pageSize) || 10
+            pageNumber: params.pageNumber || '1',
+            pageSize: params.pageSize || '10'
         });
     }
 

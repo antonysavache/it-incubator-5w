@@ -1,25 +1,38 @@
-import {BlogsService} from "./services/blogs.service";
-import {QueryParams} from "../../shared/models/common.model";
+import { BlogsService } from "./services/blogs.service";
+import { QueryParams } from "../../shared/models/common.model";
 import { Request, Response } from "express";
-import {PostsService} from "../posts/services/posts.service";
-
+import { PostsService } from "../posts/services/posts.service";
 
 export class BlogsController {
     constructor(private blogsService: BlogsService, private postsService: PostsService) {}
 
-    getBlogs = async (req: Request<{}, {}, {}, any>, res: Response) => {
+    getBlogs = async (req: Request<{}, {}, {}, QueryParams>, res: Response) => {
         const params: QueryParams = {
-            searchParams: req.query.searchNameTerm ? [
-                { fieldName: 'name', value: req.query.searchNameTerm }
-            ] : [],
-            sortBy: req.query.sortBy || '_id',
-            sortDirection: req.query.sortDirection as 'asc' | 'desc' || 'desc',
-            pageNumber: Number(req.query.pageNumber) || 1,
-            pageSize: Number(req.query.pageSize) || 10
+            searchNameTerm: req.query.searchNameTerm?.toString(),
+            sortBy: req.query.sortBy?.toString(),
+            sortDirection: req.query.sortDirection as 'asc' | 'desc',
+            pageNumber: req.query.pageNumber?.toString(),
+            pageSize: req.query.pageSize?.toString()
         };
 
         const blogs = await this.blogsService.getBlogs(params);
         res.status(200).json(blogs);
+    }
+
+    getBlogPosts = async (req: Request<{id: string}, {}, {}, QueryParams>, res: Response) => {
+        const params: QueryParams = {
+            sortBy: req.query.sortBy?.toString(),
+            sortDirection: req.query.sortDirection as 'asc' | 'desc',
+            pageNumber: req.query.pageNumber?.toString(),
+            pageSize: req.query.pageSize?.toString()
+        };
+
+        const posts = await this.blogsService.getBlogPosts(req.params.id, params);
+        if (!posts) {
+            res.sendStatus(404);
+        } else {
+            res.json(posts);
+        }
     }
 
     getBlog = async (req: Request, res: Response) => {
@@ -38,22 +51,6 @@ export class BlogsController {
 
         const createdBlog = await this.blogsService.getBlog(blogId);
         res.status(201).json(createdBlog);
-    }
-
-    getBlogPosts = async (req: Request<{id: string}, {}, {}, any>, res: Response) => {
-        const params: QueryParams = {
-            searchParams: [],
-            sortBy: req.query.sortBy || '_id',
-            sortDirection: req.query.sortDirection as 'asc' | 'desc' || 'desc',
-            pageNumber: Number(req.query.pageNumber) || 1,
-            pageSize: Number(req.query.pageSize) || 10
-        };
-
-        const posts = await this.blogsService.getBlogPosts(req.params.id, params);
-        if (!posts) {
-            res.sendStatus(404);
-        }
-        res.json(posts);
     }
 
     createBlogPost = async (req: Request, res: Response) => {

@@ -1,30 +1,38 @@
-import {ObjectId} from "mongodb";
+import { ObjectId } from "mongodb";
 
-export interface Pagination {
-    pageNumber: number;
-    pageSize: number;
+export interface BaseQueryParams {
+    sortBy?: string;
+    sortDirection?: 'asc' | 'desc';
+    pageNumber?: string;
+    pageSize?: string;
 }
 
-export interface Sort {
-    field: string;
-    direction: 'asc' | 'desc';
+export interface SearchTerms {
+    searchNameTerm?: string | null;
+    searchLoginTerm?: string | null;
+    searchEmailTerm?: string | null;
 }
 
-export interface Filter {
-    [key: string]: any;
+export const SearchTermsMapping: Record<keyof SearchTerms, string> = {
+    searchNameTerm: 'name',
+    searchLoginTerm: 'login',
+    searchEmailTerm: 'email'
+} as const;
+
+export interface SearchParam {
+    fieldName: string;
+    value: any;
 }
 
-export type WithMongoId = {
-    _id: ObjectId;
-}
+export interface QueryParams extends BaseQueryParams, Partial<SearchTerms> {}
 
-
-export type ModelWithId = {
-    _id: ObjectId
-}
-
-export type ToViewModel<T extends ModelWithId> = Omit<T, '_id'> & {
-    id: string
+export interface PaginationQueryParams {
+    searchParams: SearchParam[];
+    sortBy: string;
+    sortDirection: 'asc' | 'desc';
+    pageNumber: string;
+    pageSize: string;
+    blogId?: string;
 }
 
 export interface PageResponse<T> {
@@ -35,16 +43,10 @@ export interface PageResponse<T> {
     items: T[];
 }
 
-export interface SearchParam {
-    fieldName: string;
-    value: any;
+export type ModelWithId = {
+    _id: ObjectId;
 }
 
-export interface QueryParams {
-    searchParams: SearchParam[];
-    sortBy: string;
-    sortDirection: 'asc' | 'desc';
-    pageNumber: number;
-    pageSize: number;
-    blogId?: string;
+export type ToViewModel<T extends ModelWithId> = Omit<T, '_id'> & {
+    id: string;
 }
