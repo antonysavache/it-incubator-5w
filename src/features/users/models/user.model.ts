@@ -1,11 +1,11 @@
-import {ModelWithId} from "../../../shared/models/common.model";
+// features/users/models/user.model.ts
+import { ModelWithId } from "../../../shared/models/common.model";
 
 export interface UserModel {
-    name: string;
-    description: string;
-    websiteUrl: string;
+    login: string;
+    email: string;
+    password: string;
     createdAt: string;
-    isMembership: boolean;
 }
 
 export type UserCreateModel = {
@@ -23,4 +23,11 @@ export interface UserViewModel {
 
 export type UserDBModel = UserModel & ModelWithId;
 
+export interface ErrorMessage {
+    message: string;
+    field: string;
+}
 
+export interface ApiErrorResult {
+    errorsMessages: ErrorMessage[];
+}

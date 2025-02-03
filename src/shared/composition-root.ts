@@ -7,16 +7,19 @@ import { PostsQueryRepository } from "../features/posts/repositories/posts-query
 import { PostsCommandRepository } from "../features/posts/repositories/posts-command.repository";
 import { PostsService } from "../features/posts/services/posts.service";
 import { PostsController } from "../features/posts/posts.controller";
-import {UsersQueryRepository} from "../features/users/repositories/users-query.repository";
-import {UsersCommandRepository} from "../features/users/repositories/users-command.repository";
+
+import { UsersQueryRepository } from "../features/users/repositories/users-query.repository";
+import { UsersCommandRepository } from "../features/users/repositories/users-command.repository";
+import { UsersService } from "../features/users/services/users.service";
+import { UsersController } from "../features/users/users.controller";
 
 // Repositories
 export const blogsQueryRepository = new BlogsQueryRepository();
 export const blogsCommandRepository = new BlogsCommandRepository();
 export const postsQueryRepository = new PostsQueryRepository();
 export const postsCommandRepository = new PostsCommandRepository();
-// export const usersQueryRepository = new UsersQueryRepository();
-// export const usersCommandRepository = new UsersCommandRepository();
+export const usersQueryRepository = new UsersQueryRepository();
+export const usersCommandRepository = new UsersCommandRepository();
 
 // Services
 export const postsService = new PostsService(
@@ -32,11 +35,21 @@ export const blogsService = new BlogsService(
     postsCommandRepository
 );
 
+export const usersService = new UsersService(
+    usersQueryRepository,
+    usersCommandRepository
+);
+
 // Controllers
 export const blogsController = new BlogsController(
     blogsService,
     postsService
 );
+
 export const postsController = new PostsController(
     postsService
+);
+
+export const usersController = new UsersController(
+    usersService
 );

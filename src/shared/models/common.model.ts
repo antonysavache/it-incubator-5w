@@ -21,7 +21,7 @@ export const SearchTermsMapping: Record<keyof SearchTerms, string> = {
 
 export interface SearchParam {
     fieldName: string;
-    value: any;
+    value: string;
 }
 
 export interface QueryParams extends BaseQueryParams, Partial<SearchTerms> {}

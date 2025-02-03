@@ -1,41 +1,46 @@
 import { Request, Response } from 'express';
 import { QueryParams } from "../../shared/models/common.model";
-import {UsersService} from "./services/users.service";
+import { UsersService } from "./services/users.service";
+import { UserCreateModel } from './models/user.model';
 
 export class UsersController {
     constructor(private usersService: UsersService) {}
 
-    // getUsers = async (req: Request, res: Response) => {
-    //     const params: QueryParams = {
-    //         searchParams: [],
-    //         sortBy: req.query.sortBy?.toString() || '_id',
-    //         sortDirection: req.query.sortDirection as 'asc' | 'desc' || 'desc',
-    //         pageNumber: Number(req.query.pageNumber) || 1,
-    //         pageSize: Number(req.query.pageSize) || 10
-    //     };
-    //
-    //     const posts = await this.postsService.getPosts(params);
-    //     res.status(200).json(posts);
-    // }
-    //
-    // createUser = async (req: Request, res: Response) => {
-    //     const { title, shortDescription, content, blogId } = req.body;
-    //     const newPost = await this.postsService.createPost({
-    //         title,
-    //         shortDescription,
-    //         content,
-    //         blogId
-    //     });
-    //     res.status(newPost ? 201 : 404).json(newPost);
-    // }
-    //
-    // deleteUser = async (req: Request, res: Response) => {
-    //     const deleted = await this.postsService.deletePost(req.params.id);
-    //     res.sendStatus(deleted ? 204 : 404);
-    // }
-    //
-    // deleteAll = async (req: Request, res: Response) => {
-    //     await this.postsService.deleteAll();
-    //     res.sendStatus(204);
-    // }
+    getUsers = async (req: Request<{}, {}, {}, QueryParams>, res: Response) => {
+        const params: QueryParams = {
+            searchLoginTerm: req.query.searchLoginTerm?.toString(),
+            searchEmailTerm: req.query.searchEmailTerm?.toString(),
+            sortBy: req.query.sortBy?.toString(),
+            sortDirection: req.query.sortDirection as 'asc' | 'desc',
+            pageNumber: req.query.pageNumber?.toString(),
+            pageSize: req.query.pageSize?.toString()
+        };
+
+        const users = await this.usersService.getUsers(params);
+        return res.status(200).json(users);
+    }
+
+    createUser = async (req: Request<{}, {}, UserCreateModel>, res: Response) => {
+        const result = await this.usersService.createUser(req.body);
+
+        if ('errorsMessages' in result) {
+            return res.status(400).json(result);
+        }
+
+        return res.status(201).json(result);
+    }
+
+    deleteUser = async (req: Request<{ id: string }>, res: Response) => {
+        const deleted = await this.usersService.deleteUser(req.params.id);
+        return res.sendStatus(deleted ? 204 : 404);
+    }
+
+    login = async (req: Request<{}, {}, { loginOrEmail: string, password: string }>, res: Response) => {
+        const isValid = await this.usersService.checkCredentials(
+            req.body.loginOrEmail,
+            req.body.password
+        );
+
+        return res.sendStatus(isValid ? 204 : 401);
+    }
 }

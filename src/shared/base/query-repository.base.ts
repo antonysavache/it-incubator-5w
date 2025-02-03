@@ -6,24 +6,29 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
     async findAll(params: PaginationQueryParams): Promise<PageResponse<ToViewModel<T>>> {
         this.checkInit();
 
-        const additionalFilter = params.blogId ? { blogId: params.blogId } : {};
-        const filter = this.buildFilter(params.searchParams, additionalFilter);
-        const sort = { [params.sortBy]: params.sortDirection === 'asc' ? 1 : -1 } as Sort;
+        const filter = this.buildFilter(params.searchParams, params.blogId ? { blogId: params.blogId } : {});
 
-        // Convert string values to numbers for pagination calculations
-        const pageNumber = Number(params.pageNumber) || 1;
-        const pageSize = Number(params.pageSize) || 10;
-        const skip = (pageNumber - 1) * pageSize;
+        let query = this.collection.find(filter);
+
+        if (params.sortBy) {
+            const sortDirection = params.sortDirection === 'asc' ? 1 : -1;
+            query = query.sort({ [params.sortBy]: sortDirection });
+        }
+
+        if (params.pageNumber && params.pageSize) {
+            const skip = (Number(params.pageNumber) - 1) * Number(params.pageSize);
+            const limit = Number(params.pageSize);
+            query = query.skip(skip).limit(limit);
+        }
 
         const [items, totalCount] = await Promise.all([
-            this.collection!
-                .find(filter as Filter<T>)
-                .sort(sort)
-                .skip(skip)
-                .limit(pageSize)
-                .toArray(),
-            this.collection!.countDocuments(filter as Filter<T>)
+            query.toArray(),
+            this.collection.countDocuments(filter)
         ]);
+
+        // Calculate pagination info
+        const pageNumber = Number(params.pageNumber) || 1;
+        const pageSize = Number(params.pageSize) || 10;
 
         return {
             pagesCount: Math.ceil(totalCount / pageSize),
@@ -41,7 +46,8 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
             return null;
         }
 
-        const result = await this.collection!.findOne({ _id: new ObjectId(id) } as Filter<T>);
+        const filter = { _id: new ObjectId(id) } as Filter<T>;
+        const result = await this.collection!.findOne(filter);
 
         if (!result) {
             return null;
@@ -55,15 +61,17 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
             return additionalFilter as Filter<T>;
         }
 
-        const searchFilter = searchParams.reduce((acc, param) => ({
-            ...acc,
+        const searchConditions = searchParams.map(param => ({
             [param.fieldName]: {
                 $regex: param.value,
                 $options: 'i'
             }
-        }), {});
+        }));
 
-        return { ...additionalFilter, ...searchFilter } as Filter<T>;
+        return {
+            ...additionalFilter,
+            $or: searchConditions
+        } as Filter<T>;
     }
 
     protected toViewModel(model: WithId<T>): ToViewModel<T> {
