@@ -1,5 +1,4 @@
 import { UsersService } from "../../users/services/users.service";
-import { LoginInputModel } from "../models/auth.model";
 
 export class AuthService {
     constructor(private usersService: UsersService) {}

@@ -5,7 +5,7 @@ export abstract class BaseCommandRepository<T, CreateModel> extends AbstractRepo
     async create(data: CreateModel): Promise<string> {
         this.checkInit();
 
-        const result = await this.collection!.insertOne(data as any);
+        const result = await this.collection.insertOne(data as any);
         return result.insertedId.toString();
     }
 
@@ -16,7 +16,7 @@ export abstract class BaseCommandRepository<T, CreateModel> extends AbstractRepo
             return false;
         }
 
-        const result = await this.collection!.updateOne(
+        const result = await this.collection.updateOne(
             { _id: new ObjectId(id) } as Filter<T>,
             { $set: data } as UpdateFilter<T>
         );
@@ -40,6 +40,6 @@ export abstract class BaseCommandRepository<T, CreateModel> extends AbstractRepo
 
     async deleteAll(): Promise<void> {
         this.checkInit();
-        await this.collection!.deleteMany({});
+        await this.collection.deleteMany({});
     }
 }

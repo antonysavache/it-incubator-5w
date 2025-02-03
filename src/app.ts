@@ -13,4 +13,4 @@ app.use(SETTINGS.PATH.TESTING, testingRouter);
 app.use(SETTINGS.PATH.BLOGS, blogsRouter);
 app.use(SETTINGS.PATH.POSTS, postsRouter);
 app.use(SETTINGS.PATH.USERS, usersRouter);
-app.use(SETTINGS.PATH.AUTH_LOGIN, authRouter)
+app.use(SETTINGS.PATH.AUTH, authRouter)
