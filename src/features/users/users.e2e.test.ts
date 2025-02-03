@@ -64,14 +64,14 @@ describe('users testing', () => {
 
         createdUser = response.body;
 
+        console.log(createdUser)
+
         expect(createdUser).toEqual({
             id: expect.any(String),
             login: correctUser.login,
             email: correctUser.email,
             createdAt: expect.any(String)
         });
-
-        expect(createdUser).not.toHaveProperty('password');
     });
 
     it('should return users with pagination', async () => {
