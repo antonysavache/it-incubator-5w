@@ -3,7 +3,7 @@ import {
     blogsCommandRepository,
     blogsQueryRepository,
     postsCommandRepository,
-    postsQueryRepository
+    postsQueryRepository, usersCommandRepository, usersQueryRepository
 } from "./src/shared/composition-root";
 
 beforeAll(async () => {
@@ -13,4 +13,6 @@ beforeAll(async () => {
     blogsCommandRepository.init();
     postsQueryRepository.init();
     postsCommandRepository.init();
+    usersCommandRepository.init();
+    usersQueryRepository.init();
 })
