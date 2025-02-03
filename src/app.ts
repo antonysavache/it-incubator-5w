@@ -1,5 +1,5 @@
 import express from "express";
-import {SETTINGS} from "./settings";
+import {SETTINGS} from "./configs/settings";
 import {blogsRouter} from "./features/blogs/blogs.router";
 import {testingRouter} from "./shared/features/testing/testing.router";
 import {postsRouter} from "./features/posts/posts.router";

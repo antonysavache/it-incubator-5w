@@ -1,6 +1,6 @@
 import request from "supertest";
 import {app} from "../../app";
-import {SETTINGS} from "../../settings";
+import {SETTINGS} from "../../configs/settings";
 import {blogsMock, getBasicAuthHeader} from "../blogs/blogs.mock";
 import {postsMock} from "./posts.mock";
 

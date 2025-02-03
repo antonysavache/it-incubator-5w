@@ -1,5 +1,5 @@
 import {body, param} from 'express-validator';
-import {blogsQueryRepository} from "../../shared/composition-root";
+import {blogsQueryRepository} from "../../configs/composition-root";
 
 export const blogIdValidation = [
     body('blogId')

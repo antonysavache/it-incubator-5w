@@ -1,10 +1,10 @@
 import {Router} from "express";
-import {SETTINGS} from "../../settings";
+import {SETTINGS} from "../../configs/settings";
 import {authMiddleware} from "../../shared/middlewares/auth.middleware";
 import {handleValidationErrors} from "../../shared/middlewares/error-handler.middleware";
 import {blogsValidation} from "./blogs-validation.middleware";
 import {postsValidation} from "../posts/posts-validation.middleware";
-import {blogsController} from "../../shared/composition-root";
+import {blogsController} from "../../configs/composition-root";
 
 
 export const blogsRouter = Router({});

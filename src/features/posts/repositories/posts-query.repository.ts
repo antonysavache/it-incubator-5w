@@ -1,4 +1,4 @@
-import {BaseQueryRepository} from "../../../shared/base/query-repository.base";
+import {BaseQueryRepository} from "../../../configs/base/query-repository.base";
 import {PostDBModel} from "../models/post.model";
 
 

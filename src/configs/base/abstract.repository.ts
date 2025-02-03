@@ -1,4 +1,4 @@
-import {getDb} from "../db/mongo-db";
+import {getDb} from "../../shared/db/mongo-db";
 import {Collection} from "mongodb";
 
 export abstract class AbstractRepository<T> {

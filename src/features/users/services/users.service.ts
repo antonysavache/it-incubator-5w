@@ -4,7 +4,7 @@ import { DEFAULT_QUERY_PARAMS, PageResponse, PaginationQueryParams, QueryParams 
 import { ApiErrorResult, UserCreateModel, UserViewModel, UserDBModel } from "../models/user.model";
 import { TimestampService } from "../../../shared/services/time-stamp.service";
 import bcrypt from 'bcrypt';
-import { SETTINGS } from "../../../settings";
+import { SETTINGS } from "../../../configs/settings";
 
 export class UsersService {
     constructor(

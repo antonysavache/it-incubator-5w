@@ -1,6 +1,6 @@
 import request from 'supertest';
 import {app} from "../../app";
-import {SETTINGS} from "../../settings";
+import {SETTINGS} from "../../configs/settings";
 import {UserViewModel} from "./models/user.model";
 
 describe('users testing', () => {
@@ -64,8 +64,6 @@ describe('users testing', () => {
 
         createdUser = response.body;
 
-        console.log(createdUser)
-
         expect(createdUser).toEqual({
             id: expect.any(String),
             login: correctUser.login,
@@ -76,9 +74,11 @@ describe('users testing', () => {
 
     it('should return users with pagination', async () => {
         const response = await request(app)
-            .get(SETTINGS.PATH.USERS)
+            .get(SETTINGS.PATH.USERS + '?pageSize=50')
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .expect(200);
+
+        console.log(response.body)
 
         expect(response.body).toEqual({
             pagesCount: 1,

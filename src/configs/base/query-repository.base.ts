@@ -1,10 +1,11 @@
 import { Collection, Filter, ObjectId, Sort, WithId } from "mongodb";
-import { ModelWithId, PageResponse, PaginationQueryParams, SearchParam, ToViewModel } from "../models/common.model";
+import { ModelWithId, PageResponse, PaginationQueryParams, SearchParam, ToViewModel } from "../../shared/models/common.model";
 import { AbstractRepository } from "./abstract.repository";
 
 export abstract class BaseQueryRepository<T extends ModelWithId> extends AbstractRepository<T> {
     async findAll(params: PaginationQueryParams): Promise<PageResponse<ToViewModel<T>>> {
-        this.checkInit();
+        console.log(params)
+        // this.checkInit();
 
         const filter = this.buildFilter(params.searchParams, params.blogId ? { blogId: params.blogId } : {});
 
@@ -39,7 +40,7 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
     }
 
     async findById(id: string): Promise<ToViewModel<T> | null> {
-        this.checkInit();
+        // this.checkInit();
 
         if (!ObjectId.isValid(id)) {
             return null;

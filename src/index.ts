@@ -1,12 +1,12 @@
 import { app } from './app';
 import { runDb } from './shared/db/mongo-db';
-import { SETTINGS } from './settings';
+import { SETTINGS } from './configs/settings';
 import {
     blogsCommandRepository,
     blogsQueryRepository,
     postsCommandRepository,
-    postsQueryRepository
-} from "./shared/composition-root";
+    postsQueryRepository, usersCommandRepository, usersQueryRepository
+} from "./configs/composition-root";
 
 async function startApp() {
     try {
@@ -17,6 +17,8 @@ async function startApp() {
         blogsCommandRepository.init();
         postsQueryRepository.init();
         postsCommandRepository.init();
+        usersQueryRepository.init();
+        usersCommandRepository.init();
 
         app.listen(SETTINGS.PORT, () => {
             console.log(`Server started on port: ${SETTINGS.PORT}`);

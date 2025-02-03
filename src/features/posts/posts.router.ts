@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { authMiddleware } from '../../shared/middlewares/auth.middleware';
 import { handleValidationErrors } from '../../shared/middlewares/error-handler.middleware';
 import {blogIdValidation, postsValidation} from "./posts-validation.middleware";
-import {postsController} from "../../shared/composition-root";
+import {postsController} from "../../configs/composition-root";
 
 export const postsRouter = Router();
 

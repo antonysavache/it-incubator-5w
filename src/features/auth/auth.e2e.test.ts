@@ -1,6 +1,6 @@
 import request from 'supertest';
 import {app} from "../../app";
-import {SETTINGS} from "../../settings";
+import {SETTINGS} from "../../configs/settings";
 
 describe('auth testing', () => {
     const testUser = {

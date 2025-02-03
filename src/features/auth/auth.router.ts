@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authController } from "../../shared/composition-root";
+import { authController } from "../../configs/composition-root";
 
 export const authRouter = Router();
 

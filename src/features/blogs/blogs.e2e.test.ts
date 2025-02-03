@@ -1,6 +1,6 @@
 import request from 'supertest';
 import {app} from "../../app";
-import {SETTINGS} from "../../settings";
+import {SETTINGS} from "../../configs/settings";
 import {basicAuthMock, blogsMock, getBasicAuthHeader} from "./blogs.mock";
 
 describe('blogs testing', () => {

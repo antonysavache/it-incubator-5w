@@ -4,7 +4,7 @@ import {
     blogsQueryRepository,
     postsCommandRepository,
     postsQueryRepository, usersCommandRepository, usersQueryRepository
-} from "./src/shared/composition-root";
+} from "./src/configs/composition-root";
 
 beforeAll(async () => {
     await runDb();
