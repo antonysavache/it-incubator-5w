@@ -70,6 +70,10 @@ export class UsersService {
         return this.usersCommandRepository.delete(id);
     }
 
+    async deleteAll(): Promise<void> {
+        return this.usersCommandRepository.deleteAll();
+    }
+
     private async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
         const result = await this.usersQueryRepository.findAll({
             searchParams: [

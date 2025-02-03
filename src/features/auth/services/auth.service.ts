@@ -4,11 +4,11 @@ import { LoginInputModel } from "../models/auth.model";
 export class AuthService {
     constructor(private usersService: UsersService) {}
 
-    async checkCredentials(data: LoginInputModel): Promise<boolean> {
-        if (!data.loginOrEmail || !data.password) {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<boolean> {
+        if (!loginOrEmail || !password) {
             return false;
         }
 
-        return this.usersService.checkCredentials(data.loginOrEmail, data.password);
+        return this.usersService.checkCredentials(loginOrEmail, password);
     }
 }

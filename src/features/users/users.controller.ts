@@ -34,13 +34,4 @@ export class UsersController {
         const deleted = await this.usersService.deleteUser(req.params.id);
         return res.sendStatus(deleted ? 204 : 404);
     }
-
-    login = async (req: Request<{}, {}, { loginOrEmail: string, password: string }>, res: Response) => {
-        const isValid = await this.usersService.checkCredentials(
-            req.body.loginOrEmail,
-            req.body.password
-        );
-
-        return res.sendStatus(isValid ? 204 : 401);
-    }
 }

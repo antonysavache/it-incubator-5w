@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import {blogsService, postsService} from "../../composition-root";
+import {blogsService, postsService, usersService} from "../../composition-root";
 
 export const testingController = {
     async deleteAll(req: Request, res: Response) {
         await blogsService.deleteAll();
         await postsService.deleteAll();
+        await usersService.deleteAll();
         res.sendStatus(204);
     }
 }
