@@ -1,7 +1,6 @@
-// features/users/services/users.service.ts
 import { UsersQueryRepository } from "../repositories/users-query.repository";
 import { UsersCommandRepository } from "../repositories/users-command.repository";
-import { PageResponse, QueryParams } from "../../../shared/models/common.model";
+import { DEFAULT_QUERY_PARAMS, PageResponse, PaginationQueryParams, QueryParams } from "../../../shared/models/common.model";
 import { ApiErrorResult, UserCreateModel, UserViewModel, UserDBModel } from "../models/user.model";
 import { TimestampService } from "../../../shared/services/time-stamp.service";
 import bcrypt from 'bcrypt';
@@ -22,13 +21,15 @@ export class UsersService {
             searchParams.push({ fieldName: 'email', value: params.searchEmailTerm });
         }
 
-        return this.usersQueryRepository.findAll({
+        const queryParams: PaginationQueryParams = {
             searchParams,
-            sortBy: params.sortBy || 'createdAt',
-            sortDirection: params.sortDirection || 'desc',
-            pageNumber: params.pageNumber || '1',
-            pageSize: params.pageSize || '10'
-        });
+            sortBy: params.sortBy || DEFAULT_QUERY_PARAMS.sortBy,
+            sortDirection: params.sortDirection || DEFAULT_QUERY_PARAMS.sortDirection,
+            pageNumber: params.pageNumber || DEFAULT_QUERY_PARAMS.pageNumber,
+            pageSize: params.pageSize || DEFAULT_QUERY_PARAMS.pageSize
+        };
+
+        return this.usersQueryRepository.findAll(queryParams);
     }
 
     async createUser(data: UserCreateModel): Promise<UserViewModel | ApiErrorResult> {
@@ -42,7 +43,7 @@ export class UsersService {
             };
         }
 
-        const passwordHash = await this.generateHash(data.password);
+        const passwordHash = await bcrypt.hash(data.password, SETTINGS.SALT_ROUNDS);
 
         const userToCreate = {
             ...data,
@@ -69,20 +70,13 @@ export class UsersService {
         return this.usersCommandRepository.delete(id);
     }
 
-    private async generateHash(password: string): Promise<string> {
-        return await bcrypt.hash(password, SETTINGS.SALT_ROUNDS);
-    }
-
     private async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
         const result = await this.usersQueryRepository.findAll({
             searchParams: [
                 { fieldName: 'login', value: loginOrEmail },
                 { fieldName: 'email', value: loginOrEmail }
             ],
-            sortBy: '_id',
-            sortDirection: 'desc',
-            pageNumber: '1',
-            pageSize: '1'
+            ...DEFAULT_QUERY_PARAMS
         });
 
         if (!result.items.length) return null;
@@ -95,10 +89,7 @@ export class UsersService {
                 { fieldName: 'login', value: login },
                 { fieldName: 'email', value: email }
             ],
-            sortBy: '_id',
-            sortDirection: 'desc',
-            pageNumber: '1',
-            pageSize: '1'
+            ...DEFAULT_QUERY_PARAMS
         });
 
         if (!result.items.length) return null;

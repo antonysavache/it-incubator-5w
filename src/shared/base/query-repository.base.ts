@@ -26,7 +26,6 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
             this.collection.countDocuments(filter)
         ]);
 
-        // Calculate pagination info
         const pageNumber = Number(params.pageNumber) || 1;
         const pageSize = Number(params.pageSize) || 10;
 

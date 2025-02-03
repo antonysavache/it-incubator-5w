@@ -1,5 +1,12 @@
 import { ObjectId } from "mongodb";
 
+export const DEFAULT_QUERY_PARAMS = {
+    sortBy: 'createdAt',
+    sortDirection: 'desc' as const,
+    pageNumber: '1',
+    pageSize: '10'
+};
+
 export interface BaseQueryParams {
     sortBy?: string;
     sortDirection?: 'asc' | 'desc';
@@ -24,8 +31,10 @@ export interface SearchParam {
     value: string;
 }
 
+// Combine base params with search terms
 export interface QueryParams extends BaseQueryParams, Partial<SearchTerms> {}
 
+// Repository layer params (all required except blogId)
 export interface PaginationQueryParams {
     searchParams: SearchParam[];
     sortBy: string;
