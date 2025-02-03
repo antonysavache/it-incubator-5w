@@ -12,6 +12,8 @@ import { UsersQueryRepository } from "../features/users/repositories/users-query
 import { UsersCommandRepository } from "../features/users/repositories/users-command.repository";
 import { UsersService } from "../features/users/services/users.service";
 import { UsersController } from "../features/users/users.controller";
+import {AuthService} from "../features/auth/services/auth.service";
+import {AuthController} from "../features/auth/auth.controller";
 
 // Repositories
 export const blogsQueryRepository = new BlogsQueryRepository();
@@ -40,6 +42,8 @@ export const usersService = new UsersService(
     usersCommandRepository
 );
 
+export const authService = new AuthService(usersService);
+
 // Controllers
 export const blogsController = new BlogsController(
     blogsService,
@@ -53,3 +57,5 @@ export const postsController = new PostsController(
 export const usersController = new UsersController(
     usersService
 );
+
+export const authController = new AuthController(authService);
