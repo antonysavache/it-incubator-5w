@@ -90,14 +90,22 @@ export class UsersService {
     private async checkUserExists(login: string, email: string): Promise<string | null> {
         const result = await this.usersQueryRepository.findAll({
             searchParams: [
-                { fieldName: 'login', value: login },
                 { fieldName: 'email', value: email }
             ],
             ...DEFAULT_QUERY_PARAMS
         });
 
-        if (!result.items.length) return null;
-        const user = result.items[0];
-        return user.email === email ? 'email' : 'login';
+        if (result.items.length) return 'email';
+
+        const loginResult = await this.usersQueryRepository.findAll({
+            searchParams: [
+                { fieldName: 'login', value: login }
+            ],
+            ...DEFAULT_QUERY_PARAMS
+        });
+
+        if (loginResult.items.length) return 'login';
+
+        return null;
     }
 }

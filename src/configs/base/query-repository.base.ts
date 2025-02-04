@@ -4,8 +4,7 @@ import { AbstractRepository } from "./abstract.repository";
 
 export abstract class BaseQueryRepository<T extends ModelWithId> extends AbstractRepository<T> {
     async findAll(params: PaginationQueryParams): Promise<PageResponse<ToViewModel<T>>> {
-        console.log(params)
-        // this.checkInit();
+        this.checkInit();
 
         const filter = this.buildFilter(params.searchParams, params.blogId ? { blogId: params.blogId } : {});
 
@@ -40,7 +39,7 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
     }
 
     async findById(id: string): Promise<ToViewModel<T> | null> {
-        // this.checkInit();
+        this.checkInit();
 
         if (!ObjectId.isValid(id)) {
             return null;
@@ -75,6 +74,9 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
     }
 
     protected toViewModel(model: WithId<T>): ToViewModel<T> {
+        if ('password' in model) {
+            delete model.password;
+        }
         const { _id, ...rest } = model;
         return {
             ...rest,
