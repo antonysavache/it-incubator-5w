@@ -58,6 +58,21 @@ export class UsersService {
         return createdUser;
     }
 
+    async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
+        const user = await this.usersQueryRepository.findAll({
+            searchParams: [
+                { fieldName: 'login', value: loginOrEmail },
+                { fieldName: 'email', value: loginOrEmail }
+            ],
+            sortBy: 'createdAt',
+            sortDirection: 'desc',
+            pageNumber: '1',
+            pageSize: '1'
+        });
+
+        return user.items[0] as unknown as UserDBModel || null;
+    }
+
     async checkCredentials(loginOrEmail: string, password: string): Promise<boolean> {
         const user = await this.findUserByLoginOrEmail(loginOrEmail);
         if (!user) return false;
@@ -88,20 +103,26 @@ export class UsersService {
     }
 
     private async checkUserExists(login: string, email: string): Promise<string | null> {
-        const result = await this.usersQueryRepository.findAll({
+        const emailResult = await this.usersQueryRepository.findAll({
             searchParams: [
-                { fieldName: 'email', value: email }
+                { fieldName: 'email', value: email, isExact: true }
             ],
-            ...DEFAULT_QUERY_PARAMS
+            sortBy: 'createdAt',
+            sortDirection: 'desc',
+            pageNumber: '1',
+            pageSize: '1'
         });
 
-        if (result.items.length) return 'email';
+        if (emailResult.items.length) return 'email';
 
         const loginResult = await this.usersQueryRepository.findAll({
             searchParams: [
-                { fieldName: 'login', value: login }
+                { fieldName: 'login', value: login, isExact: true }
             ],
-            ...DEFAULT_QUERY_PARAMS
+            sortBy: 'createdAt',
+            sortDirection: 'desc',
+            pageNumber: '1',
+            pageSize: '1'
         });
 
         if (loginResult.items.length) return 'login';

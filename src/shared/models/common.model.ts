@@ -29,6 +29,7 @@ export const SearchTermsMapping: Record<keyof SearchTerms, string> = {
 export interface SearchParam {
     fieldName: string;
     value: string;
+    isExact?: boolean;
 }
 
 // Combine base params with search terms

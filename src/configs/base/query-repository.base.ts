@@ -60,17 +60,14 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
             return additionalFilter as Filter<T>;
         }
 
-        const searchConditions = searchParams.map(param => ({
-            [param.fieldName]: {
-                $regex: param.value,
-                $options: 'i'
-            }
-        }));
+        const searchFilter = searchParams.reduce((acc, param) => ({
+            ...acc,
+            [param.fieldName]: param.isExact
+                ? param.value
+                : { $regex: param.value, $options: 'i' }
+        }), {});
 
-        return {
-            ...additionalFilter,
-            $or: searchConditions
-        } as Filter<T>;
+        return { ...additionalFilter, ...searchFilter } as Filter<T>;
     }
 
     protected toViewModel(model: WithId<T>): ToViewModel<T> {
