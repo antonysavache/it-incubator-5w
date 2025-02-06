@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export const DEFAULT_QUERY_PARAMS = {
-    sortBy: 'createdAt',
+    sortBy: '_id',
     sortDirection: 'desc' as const,
     pageNumber: '1',
     pageSize: '10'
