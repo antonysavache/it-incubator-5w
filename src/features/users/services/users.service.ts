@@ -29,7 +29,15 @@ export class UsersService {
             pageSize: params.pageSize || DEFAULT_QUERY_PARAMS.pageSize
         };
 
-        return this.usersQueryRepository.findAll(queryParams);
+        const result = await this.usersQueryRepository.findAll(queryParams);
+
+        return {
+            ...result,
+            items: result.items.map(user => {
+                const { password, ...userWithoutPassword } = user;
+                return userWithoutPassword;
+            })
+        };
     }
 
     async createUser(data: UserCreateModel): Promise<UserViewModel | ApiErrorResult> {
@@ -55,7 +63,8 @@ export class UsersService {
         const createdUser = await this.usersQueryRepository.findById(userId);
 
         if (!createdUser) throw new Error('User not found after creation');
-        return createdUser;
+        const { password, ...userWithoutPassword } = createdUser;
+        return userWithoutPassword;
     }
 
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
@@ -111,13 +120,10 @@ export class UsersService {
             pageSize: '100'
         });
 
-        console.log('Existing users:', users.items);
-
         const emailExists = users.items.some((user: any) =>
             user.email.toLowerCase() === email.toLowerCase()
         );
         if (emailExists) {
-            console.log('Email exists:', email);
             return 'email';
         }
 
@@ -125,7 +131,6 @@ export class UsersService {
             user.login.toLowerCase() === login.toLowerCase()
         );
         if (loginExists) {
-            console.log('Login exists:', login);
             return 'login';
         }
 

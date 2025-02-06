@@ -74,9 +74,6 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
     }
 
     protected toViewModel(model: WithId<T>): ToViewModel<T> {
-        if ('password' in model) {
-            delete model.password;
-        }
         const { _id, ...rest } = model;
         return {
             ...rest,
