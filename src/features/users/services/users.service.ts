@@ -103,25 +103,23 @@ export class UsersService {
     }
 
     private async checkUserExists(login: string, email: string): Promise<string | null> {
-        const emailUser = await this.usersQueryRepository.findAll({
-            searchParams: [{ fieldName: 'email', value: email, isExact: true }],
+        const users = await this.usersQueryRepository.findAll({
+            searchParams: [],
             sortBy: 'createdAt',
             sortDirection: 'desc',
             pageNumber: '1',
-            pageSize: '1'
+            pageSize: '100'
         });
 
-        if (emailUser.items.length > 0) return 'email';
+        const emailExists = users.items.some((user: any) =>
+            user.email.toLowerCase() === email.toLowerCase()
+        );
+        if (emailExists) return 'email';
 
-        const loginUser = await this.usersQueryRepository.findAll({
-            searchParams: [{ fieldName: 'login', value: login, isExact: true }],
-            sortBy: 'createdAt',
-            sortDirection: 'desc',
-            pageNumber: '1',
-            pageSize: '1'
-        });
-
-        if (loginUser.items.length > 0) return 'login';
+        const loginExists = users.items.some((user: any) =>
+            user.login.toLowerCase() === login.toLowerCase()
+        );
+        if (loginExists) return 'login';
 
         return null;
     }
