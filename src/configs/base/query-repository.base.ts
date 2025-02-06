@@ -61,10 +61,11 @@ export abstract class BaseQueryRepository<T extends ModelWithId> extends Abstrac
         }
 
         const conditions = searchParams.map(param => ({
-            [param.fieldName]: param.isExact
-                ? { $regex: `^${param.value}$`, $options: 'i' }
-                : { $regex: param.value, $options: 'i' }
-        }));
+            [param.fieldName]: param.isExact ? param.value : {
+                $regex: param.value,
+                $options: 'i'
+            }
+        })) as Filter<T>[];
 
         return {
             ...additionalFilter,
