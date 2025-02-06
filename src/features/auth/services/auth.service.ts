@@ -5,11 +5,11 @@ export class AuthService {
     constructor(private usersService: UsersService) {}
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<boolean> {
-        try {
-            const result = await this.usersService.findByLoginOrEmail(loginOrEmail);
-            if (!result) return false;
+        const user = await this.usersService.findByLoginOrEmail(loginOrEmail);
+        if (!user) return false;
 
-            return await bcrypt.compare(password, result.password);
+        try {
+            return await bcrypt.compare(password, user.password);
         } catch (error) {
             console.error('Auth error:', error);
             return false;
