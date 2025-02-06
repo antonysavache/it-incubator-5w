@@ -5,7 +5,7 @@ export const testingController = {
     async deleteAll(req: Request, res: Response) {
         await blogsService.deleteAll();
         await postsService.deleteAll();
-        // await usersService.deleteAll();
+        await usersService.deleteAll();
         res.sendStatus(204);
     }
 }

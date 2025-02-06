@@ -111,15 +111,23 @@ export class UsersService {
             pageSize: '100'
         });
 
+        console.log('Existing users:', users.items);
+
         const emailExists = users.items.some((user: any) =>
             user.email.toLowerCase() === email.toLowerCase()
         );
-        if (emailExists) return 'email';
+        if (emailExists) {
+            console.log('Email exists:', email);
+            return 'email';
+        }
 
         const loginExists = users.items.some((user: any) =>
             user.login.toLowerCase() === login.toLowerCase()
         );
-        if (loginExists) return 'login';
+        if (loginExists) {
+            console.log('Login exists:', login);
+            return 'login';
+        }
 
         return null;
     }

@@ -14,10 +14,11 @@ export class AuthController {
             }
 
             const isValid = await this.authService.checkCredentials(loginOrEmail, password);
+            console.log('Login validation result:', { loginOrEmail, isValid });
             return res.sendStatus(isValid ? 204 : 401);
         } catch (error) {
             console.error('Login error:', error);
-            return res.sendStatus(401);
+            return res.sendStatus(500);
         }
     }
 }
